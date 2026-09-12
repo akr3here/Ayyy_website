@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clients &amp; Projects</title>
+
+  <!-- Google Fonts: Geometric / Extended tech aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@400;500;700;800&family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* -------------------------------------------------------------
+       UNIFORM DESIGN TOKENS
+    ------------------------------------------------------------- */
+    :root {
+      --bg-color: #b50505;
+      --text-color: #ffffff;
+      --card-dark: #121010;
+      --card-lime: #c8e018;
+      --font-display: 'Michroma', sans-serif;
+      --font-body: 'Michroma', sans-serif;
+      --page-padding: 3rem 4rem;
+      --gap-base: 1.5rem;
+      --transition-smooth: 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-body);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: var(--page-padding);
+    }
+
+    /* -------------------------------------------------------------
+       BUTTON / INTERACTION UTILITY
+    ------------------------------------------------------------- */
+    .char-btn,
+    .interactive {
+      display: inline-block;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+    }
+
+    .char-btn:hover,
+    .interactive:hover {
+      opacity: 0.85;
+      transform: translateY(-2px);
+    }
+
+    .char-btn:focus-visible,
+    .interactive:focus-visible {
+      outline: 2px dashed #ffffff;
+      outline-offset: 4px;
+    }
+
+    /* -------------------------------------------------------------
+       TOP NAVIGATION BAR
+    ------------------------------------------------------------- */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .nav-back {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: transform var(--transition-smooth);
+    }
+
+    .nav-back:hover {
+      transform: translateX(-4px);
+    }
+
+    .nav-back svg {
+      width: 38px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 3.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+      transition: opacity var(--transition-smooth);
+    }
+
+    .nav-links a:hover {
+      opacity: 0.75;
+    }
+
+    .nav-links .home-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vertical-align: middle;
+    }
+
+    /* -------------------------------------------------------------
+       DUAL COLUMN WORKSPACE
+    ------------------------------------------------------------- */
+    .workspace-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      flex-grow: 1;
+      margin-top: 2.8rem;
+      min-height: 0;
+    }
+
+    .column-panel {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .column-title {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 2rem;
+      flex-shrink: 0;
+    }
+
+    .char-item {
+      display: inline-block;
+    }
+
+    /* Scrollable Containers */
+    .scroll-area {
+      flex-grow: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 1.25rem;
+      padding-bottom: 4rem;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroll-area::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* -------------------------------------------------------------
+       CLIENTS COLUMN (Gliding Replace Stack)
+    ------------------------------------------------------------- */
+    .clients-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-base);
+      width: 100%;
+      --row-height: calc((100vh - 3.5rem - 2.8rem - 2.6rem - 2rem - 6rem - var(--gap-base)) / 2);
+    }
+
+    .client-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--gap-base);
+      height: var(--row-height);
+      width: 100%;
+      flex-shrink: 0;
+      transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+      will-change: transform, opacity;
+    }
+
+    .client-card {
+      background-color: var(--card-dark);
+      border-radius: 20px;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      transition: transform var(--transition-smooth), filter var(--transition-smooth);
+    }
+
+    .client-card:hover {
+      transform: translateY(-4px);
+      filter: brightness(1.08);
+    }
+
+    .client-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      display: block;
+      pointer-events: none;
+      background-color: #222;
+    }
+
+    /* -------------------------------------------------------------
+       PROJECTS COLUMN (Zigzag + Banner Stack)
+    ------------------------------------------------------------- */
+    .projects-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-base);
+      width: 100%;
+      padding-bottom: 4rem;
+    }
+
+    .project-card {
+      background-color: var(--card-dark);
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+      transition: transform var(--transition-smooth), filter var(--transition-smooth);
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      filter: brightness(1.05);
+    }
+
+    .vertical-9-16 {
+      width: calc(50% - (var(--gap-base) / 2));
+      aspect-ratio: 9 / 16;
+    }
+
+    .pos-left {
+      align-self: flex-start;
+    }
+
+    .pos-right {
+      align-self: flex-end;
+    }
+
+    .horizontal-banner {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      align-self: stretch;
+    }
+
+    .project-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* -------------------------------------------------------------
+       FULLSCREEN VIDEO MODAL
+    ------------------------------------------------------------- */
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-modal.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .video-modal-player {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+      transform: scale(0.94);
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .video-modal.is-open .video-modal-player {
+      transform: scale(1);
+    }
+
+    .video-modal-close {
+      position: absolute;
+      top: 2rem;
+      right: 2.5rem;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(181, 5, 5, 0.85);
+      border: none;
+      border-radius: 50%;
+      color: var(--text-color);
+      cursor: pointer;
+      z-index: 1001;
+      transition: transform var(--transition-smooth), background var(--transition-smooth);
+    }
+
+    .video-modal-close:hover {
+      background: var(--bg-color);
+      transform: scale(1.08);
+    }
+
+    .video-modal-close svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      fill: none;
+    }
+
+    /* -------------------------------------------------------------
+       RESPONSIVE ADAPTATIONS
+    ------------------------------------------------------------- */
+    @media (max-width: 1024px) {
+      body {
+        height: auto;
+        overflow-y: auto;
+        padding: 2rem 1.5rem;
+      }
+      .workspace-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        height: auto;
+      }
+      .scroll-area {
+        overflow-y: visible;
+        padding-right: 0;
+      }
+      .clients-stack {
+        --row-height: 260px;
+      }
+      .column-title {
+        font-size: 2rem;
+      }
+      .nav-links {
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="top-nav">
+    <button class="nav-back" aria-label="Go back">
+      <svg viewBox="0 0 40 24">
+        <line x1="38" y1="12" x2="4" y2="12"></line>
+        <polyline points="14 3 3 12 14 21"></polyline>
+      </svg>
+    </button>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="contact.html" class="interactive">CONTACT</a></li>
+        <li><a href="how.html" class="interactive">HOW</a></li>
+        <li><a href="why.html" class="interactive">WHY</a></li>
+        <li>
+          <a href="index.html" class="interactive home-icon" aria-label="Home">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"></path>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Dual Column Workspace -->
+  <div class="workspace-container">
+
+    <!-- LEFT PANEL: CLIENTS -->
+    <section class="column-panel">
+      <h2 class="column-title">
+        <span class="char-item">C</span><span class="char-item">L</span><span class="char-item">I</span><span class="char-item">E</span><span class="char-item">N</span><span class="char-item">T</span><span class="char-item">S</span>
+      </h2>
+
+      <div class="scroll-area" id="clientsTrack">
+        <div class="clients-stack" id="clientsStack">
+          
+          <!-- Row 1: Client 1 & 2 -->
+          <div class="client-row">
+            <div class="client-card interactive" role="button" tabindex="0">
+              <img class="client-photo" src="client-1.jpg" alt="Client 1" />
+            </div>
+            <div class="client-card interactive" role="button" tabindex="0">
+              <img class="client-photo" src="client-2.jpg" alt="Client 2" />
+            </div>
+          </div>
+
+          <!-- Row 2: Client 3 & 4 -->
+          <div class="client-row">
+            <div class="client-card interactive" role="button" tabindex="0">
+              <img class="client-photo" src="client-3.jpg" alt="Client 3" />
+            </div>
+            <div class="client-card interactive" role="button" tabindex="0">
+              <img class="client-photo" src="client-4.jpg" alt="Client 4" />
+            </div>
+          </div>
+
+          <!-- Row 3: Client 5 & 6 -->
+          <div class="client-row">
+            <div class="client-card interactive" role="button" tabindex="0">
+              <img class="client-photo" src="client-5.jpg" alt="Client 5" />
+            </div>
+            <div class="client-card interactive" role="button" tabindex="0">
+              <img class="client-photo" src="client-6.jpg" alt="Client 6" />
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: PROJECTS -->
+    <section class="column-panel">
+      <h2 class="column-title">
+        <span class="char-item">P</span><span class="char-item">R</span><span class="char-item">O</span><span class="char-item">J</span><span class="char-item">E</span><span class="char-item">C</span><span class="char-item">T</span><span class="char-item">S</span>
+      </h2>
+
+      <div class="scroll-area" id="projectsTrack">
+        <div class="projects-stack">
+          
+          <!-- 1. Full-width Horizontal Video (16:9) -->
+          <div class="project-card horizontal-banner interactive" role="button" tabindex="0" aria-label="Featured Project 1">
+            <video class="project-video" muted loop playsinline preload="metadata" poster="project-1-thumb.jpg">
+              <source src="https://videos.alokray.com/NetflixAd.mp4#t=0.001" type="video/mp4">
+            </video>
+          </div>
+
+          <!-- 2. Vertical 9:16 Reel (Left) -->
+          <div class="project-card vertical-9-16 pos-left interactive" role="button" tabindex="0" aria-label="Vertical Reel 1">
+            <video class="project-video" muted loop playsinline preload="metadata" poster="project-2-thumb.jpg">
+              <source src="https://videos.alokray.com/Communicate.mp4#t=0.001" type="video/mp4">
+            </video>
+          </div>
+
+          <!-- 3. Vertical 9:16 Reel (Right - Staggered Zigzag) -->
+          <div class="project-card vertical-9-16 pos-right interactive" role="button" tabindex="0" aria-label="Vertical Reel 2">
+            <video class="project-video" muted loop playsinline preload="metadata" poster="project-3-thumb.jpg">
+              <source src="https://videos.alokray.com/Communicate.mp4#t=0.001" type="video/mp4">
+            </video>
+          </div>
+
+          <!-- 4. Full-width Horizontal Video (16:9) -->
+          <div class="project-card horizontal-banner interactive" role="button" tabindex="0" aria-label="Featured Project 2">
+            <video class="project-video" muted loop playsinline preload="metadata" poster="project-4-thumb.jpg">
+              <source src="https://videos.alokray.com/NetflixAd.mp4#t=0.001" type="video/mp4">
+            </video>
+          </div>
+
+          <!-- 5. Vertical 9:16 Reel (Left) -->
+          <div class="project-card vertical-9-16 pos-left interactive" role="button" tabindex="0" aria-label="Vertical Reel 3">
+            <video class="project-video" muted loop playsinline preload="metadata" poster="project-5-thumb.jpg">
+              <source src="https://videos.alokray.com/Communicate.mp4#t=0.001" type="video/mp4">
+            </video>
+          </div>
+
+          <!-- 6. Vertical 9:16 Reel (Right) -->
+          <div class="project-card vertical-9-16 pos-right interactive" role="button" tabindex="0" aria-label="Vertical Reel 4">
+            <video class="project-video" muted loop playsinline preload="metadata" poster="project-6-thumb.jpg">
+              <source src="https://videos.alokray.com/Communicate.mp4#t=0.001" type="video/mp4">
+            </video>
+          </div>
+          
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Fullscreen Video Modal -->
+  <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Video player">
+    <button class="video-modal-close" id="videoModalClose" aria-label="Close video">
+      <svg viewBox="0 0 24 24">
+        <line x1="5" y1="5" x2="19" y2="19"></line>
+        <line x1="19" y1="5" x2="5" y2="19"></line>
+      </svg>
+    </button>
+    <video class="video-modal-player" id="modalVideo" controls playsinline></video>
+  </div>
+
+  <script>
+    /* -------------------------------------------------------------
+       1. AUTO-FALLBACK LOADER: Clients
+    ------------------------------------------------------------- */
+    (function () {
+      var fallbackSvg = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+          <rect width="100%" height="100%" fill="#999793"/>
+          <path d="M0 0 L180 0 L150 500 L0 500 Z" fill="#888581"/>
+          <ellipse cx="200" cy="185" rx="55" ry="65" fill="#e0a37e"/>
+          <path d="M142 175 Q200 115 258 175 Q262 140 200 135 Q138 140 142 175 Z" fill="#201b19"/>
+          <circle cx="180" cy="175" r="5" fill="#221e1d"/>
+          <circle cx="220" cy="175" r="5" fill="#221e1d"/>
+          <path d="M185 198 Q200 203 215 198" stroke="#332a26" stroke-width="4" stroke-linecap="round" fill="none"/>
+          <path d="M182 208 Q200 230 218 208 Z" fill="#ffffff"/>
+          <path d="M120 270 Q200 280 280 270 L340 500 L60 500 Z" fill="#d31010"/>
+          <polygon points="175,275 200,340 225,275" fill="#ad0a0a"/>
+          <circle cx="160" cy="330" r="8" fill="#1b1716" opacity="0.8"/>
+          <circle cx="180" cy="350" r="10" fill="#1b1716" opacity="0.8"/>
+          <circle cx="220" cy="350" r="10" fill="#1b1716" opacity="0.8"/>
+          <circle cx="240" cy="330" r="8" fill="#1b1716" opacity="0.8"/>
+          <circle cx="200" cy="380" r="12" fill="#1b1716" opacity="0.8"/>
+        </svg>
+      `);
+
+      var photos = document.querySelectorAll('.client-photo');
+      photos.forEach(function (img) {
+        var originalSrc = img.getAttribute('src');
+        img.onerror = function () {
+          img.src = fallbackSvg;
+        };
+        var testImg = new Image();
+        testImg.onerror = function () {
+          img.src = fallbackSvg;
+        };
+        testImg.src = originalSrc;
+      });
+    })();
+
+    /* -------------------------------------------------------------
+       2. CLIENTS COLUMN: Smooth Gliding Replacement Effect
+    ------------------------------------------------------------- */
+    (function () {
+      var track = document.getElementById('clientsTrack');
+      var rows = Array.prototype.slice.call(document.querySelectorAll('.client-row'));
+      if (!track || rows.length < 2) return;
+
+      track.addEventListener('scroll', function () {
+        var scrollTop = track.scrollTop;
+        var rowHeight = rows[0].offsetHeight + 24;
+
+        var progress1 = Math.min(1, scrollTop / rowHeight);
+        rows[0].style.transform = 'scale(' + (1 - progress1 * 0.08) + ') translateY(' + (-progress1 * 20) + 'px)';
+        rows[0].style.opacity = (1 - progress1 * 0.45).toFixed(2);
+
+        if (rows[1]) {
+          rows[1].style.transform = 'translateY(' + (-scrollTop * 0.1) + 'px)';
+        }
+      }, { passive: true });
+    })();
+
+    /* -------------------------------------------------------------
+       3. HOVER-TO-PLAY ENGINE (PAUSES ON LEAVE)
+    ------------------------------------------------------------- */
+    (function () {
+      var cards = document.querySelectorAll('.project-card');
+
+      cards.forEach(function (card) {
+        var video = card.querySelector('.project-video');
+        if (!video) return;
+
+        // Ensure native first-frame displays when no poster image is loaded
+        video.currentTime = 0.001;
+
+        card.addEventListener('mouseenter', function () {
+          var playPromise = video.play();
+          if (playPromise && playPromise.catch) {
+            playPromise.catch(function () {});
+          }
+        });
+
+        card.addEventListener('mouseleave', function () {
+          video.pause();
+        });
+      });
+    })();
+
+    /* -------------------------------------------------------------
+       4. LIGHTWEIGHT MOMENTUM ENGINE FOR PROJECTS & CLIENTS
+    ------------------------------------------------------------- */
+    (function () {
+      var isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (isTouch) return;
+
+      function bindLerpTrack(track) {
+        if (!track) return;
+
+        var currentScroll = track.scrollTop;
+        var targetScroll = track.scrollTop;
+        var isRunning = false;
+
+        function render() {
+          var diff = targetScroll - currentScroll;
+          currentScroll += diff * 0.14;
+
+          track.scrollTop = Math.round(currentScroll);
+
+          if (Math.abs(diff) > 0.5) {
+            requestAnimationFrame(render);
+          } else {
+            currentScroll = targetScroll;
+            track.scrollTop = currentScroll;
+            isRunning = false;
+          }
+        }
+
+        track.addEventListener('wheel', function (e) {
+          e.preventDefault();
+          var maxScroll = track.scrollHeight - track.clientHeight;
+          targetScroll += e.deltaY * 1.15;
+          targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
+
+          if (!isRunning) {
+            isRunning = true;
+            requestAnimationFrame(render);
+          }
+        }, { passive: false });
+      }
+
+      bindLerpTrack(document.getElementById('clientsTrack'));
+      bindLerpTrack(document.getElementById('projectsTrack'));
+    })();
+
+    /* -------------------------------------------------------------
+       5. FULLSCREEN MODAL CONTROLLER
+    ------------------------------------------------------------- */
+    (function () {
+      var modal = document.getElementById('videoModal');
+      var modalVideo = document.getElementById('modalVideo');
+      var closeBtn = document.getElementById('videoModalClose');
+      var cards = Array.prototype.slice.call(document.querySelectorAll('.project-card'));
+
+      function openModal(card) {
+        var sourceEl = card.querySelector('video source');
+        if (!sourceEl) return;
+
+        var thumbVideo = card.querySelector('video');
+        if (thumbVideo) thumbVideo.pause();
+
+        var cleanSrc = sourceEl.getAttribute('src').split('#')[0];
+        modalVideo.src = cleanSrc;
+
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+
+        modalVideo.currentTime = 0;
+        modalVideo.muted = false;
+        var playPromise = modalVideo.play();
+        if (playPromise && playPromise.catch) playPromise.catch(function () {});
+
+        closeBtn.focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+
+        modalVideo.pause();
+        modalVideo.removeAttribute('src');
+        modalVideo.load();
+      }
+
+      cards.forEach(function (card) {
+        card.addEventListener('click', function () {
+          openModal(card);
+        });
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openModal(card);
+          }
+        });
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+      });
+    })();
+  </script>
+
+  <!-- Universal Hierarchical Back Navigation -->
+  <script src="nav.js"></script>
+
+</body>
+</html>
