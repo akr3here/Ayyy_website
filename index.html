@@ -42,6 +42,30 @@
       transition: background-color var(--transition-core);
     }
 
+    /* -------------------------------------------------------------
+       KILL CLICK / FOCUS RECTANGLE ON SVG RINGS & LINKS
+    ------------------------------------------------------------- */
+    a, 
+    a:focus, 
+    a:active,
+    .ring-link, 
+    .ring-link:focus, 
+    .ring-link:active,
+    .ring-layer:focus,
+    .ring-layer:active {
+      outline: none !important;
+      box-shadow: none !important;
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-touch-callout: none !important;
+      user-select: none !important;
+    }
+
+    svg, 
+    svg:focus,
+    svg *:focus {
+      outline: none !important;
+    }
+
     /* Screen Inversion State */
     body.is-hovered {
       background-color: var(--brand-red);
