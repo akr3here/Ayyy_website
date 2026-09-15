@@ -209,6 +209,7 @@
       align-items: center;
       gap: var(--tool-gap);
       width: max-content;
+      padding-left: 1.0rem;
     }
 
     /* -------------------------------------------------------------
@@ -232,7 +233,33 @@
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
       transition: transform var(--transition-smooth), background-color var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth);
     }
-
+    .tool-popup-badge {
+      position: absolute;
+      bottom: -3.2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #ffffff;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 50;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+    .tool-card:hover .tool-popup-badge {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
     .tool-card:hover {
       background: rgba(255, 255, 255, 0.18);
       border-color: rgba(255, 255, 255, 0.5);
@@ -367,90 +394,113 @@
         <!-- Premiere Pro -->
         <div class="tool-card interactive" tabindex="0">
           <div class="tool-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <rect width="24" height="24" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
-              <text x="5" y="16.5" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="11" fill="#fff">Pr</text>
-            </svg>
+            <img 
+              src="Assets/Adobe_Premiere_Pro_CC_icon.svg" 
+              alt="After Effects" 
+              style="width: 260%; height: 250%; object-fit: contain;"
+            >
           </div>
-          <span class="tool-name">Premiere Pro</span>
+          <span class="tool-popup-badge">Adobe Premiere Pro</span>
         </div>
 
         <!-- After Effects -->
         <div class="tool-card interactive" tabindex="0">
           <div class="tool-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <rect width="24" height="24" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
-              <text x="5" y="16.5" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="11" fill="#fff">Ae</text>
-            </svg>
+            <img 
+              src="Assets/Adobe_After_Effects_CC_icon.svg" 
+              alt="After Effects" 
+              style="width: 260%; height: 250%; object-fit: contain;"
+            >
           </div>
-          <span class="tool-name">After Effects</span>
+          <span class="tool-popup-badge">Adobe After Effects</span>
         </div>
 
         <!-- DaVinci Resolve -->
-        <div class="tool-card interactive" tabindex="0">
+        <div class="tool-card interactive" tabindex="0" style="background: #383838;">
           <div class="tool-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="7" r="3"/>
-              <circle cx="7" cy="16" r="3"/>
-              <circle cx="17" cy="16" r="3"/>
-            </svg>
+            <img 
+              src="Assets/DaVinci_Resolve_17_logo.svg" 
+              alt="After Effects" 
+              style="width: 260%; height: 250%; object-fit: contain;"
+            >
           </div>
-          <span class="tool-name">DaVinci</span>
+          <span class="tool-popup-badge">DaVinci Resolve</span>
         </div>
 
         <!-- Blender -->
-        <div class="tool-card interactive" tabindex="0">
+        <div class="tool-card interactive" tabindex="0"  style="background-color: #ffffff;">
           <div class="tool-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="14" r="5"/>
-              <path d="M12 9V3M7.5 10.5L3.5 6.5M16.5 10.5L20.5 6.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+            <img 
+              src="Assets/Blender_logo_no_text.svg" 
+              alt="After Effects" 
+              style="width: 200%; height: 200%; object-fit: contain;"
+            >
           </div>
-          <span class="tool-name">Blender</span>
+          <span class="tool-popup-badge">Blender</span>
         </div>
+
 
         <!-- Photoshop -->
         <div class="tool-card interactive" tabindex="0">
           <div class="tool-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <rect width="24" height="24" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
-              <text x="5" y="16.5" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="11" fill="#fff">Ps</text>
-            </svg>
+            <img 
+              src="Assets/Adobe_Photoshop_CC_icon.svg" 
+              alt="After Effects" 
+              style="width: 260%; height: 250%; object-fit: contain;"
+            >
           </div>
-          <span class="tool-name">Photoshop</span>
+          <span class="tool-popup-badge">Adobe Photoshop</span>
         </div>
 
         <!-- Illustrator -->
         <div class="tool-card interactive" tabindex="0">
           <div class="tool-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <rect width="24" height="24" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
-              <text x="7" y="16.5" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="11" fill="#fff">Ai</text>
-            </svg>
+            <img 
+              src="Assets/Adobe_Illustrator_CC_icon.svg" 
+              alt="After Effects" 
+              style="width: 260%; height: 250%; object-fit: contain;"
+            >
           </div>
-          <span class="tool-name">Illustrator</span>
+          <span class="tool-popup-badge">Adobe Illustrator</span>
         </div>
 
         <!-- Figma -->
-        <div class="tool-card interactive" tabindex="0">
+        <div class="tool-card interactive" tabindex="0" style="background: #000000;">
           <div class="tool-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 2H8.5a3.5 3.5 0 0 0 0 7h3.5zm0 7H8.5a3.5 3.5 0 0 0 0 7h3.5zm0 7H8.5a3.5 3.5 0 0 0 3.5 3.5V16zm0-14h3.5a3.5 3.5 0 0 1 0 7H12zm0 7h3.5a3.5 3.5 0 0 1 0 7H12z"/>
-            </svg>
+            <img 
+              src="Assets/Figma-logo.svg" 
+              alt="After Effects" 
+              style="width: 180%; height: 180%; object-fit: contain; "
+            >
           </div>
-          <span class="tool-name">Figma</span>
+          <span class="tool-popup-badge">Figma</span>
         </div>
 
-        <!-- Cinema 4D -->
-        <div class="tool-card interactive" tabindex="0">
+        <!-- Audition -->
+        <div class="tool-card interactive" tabindex="0" >
           <div class="tool-icon-wrap">
-            <svg viewBox="0 0 24 24">
-              <rect width="24" height="24" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
-              <text x="3.5" y="16.5" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="11" fill="#fff">C4D</text>
-            </svg>
+            <img 
+              src="Assets/Adobe_Audition_CC_2026_icon.svg" 
+              alt="After Effects" 
+              style="width: 260%; height: 250%; object-fit: contain; "
+            >
           </div>
-          <span class="tool-name">Cinema 4D</span>
+          <span class="tool-popup-badge">Audition</span>
         </div>
+
+        <!-- Audition -->
+        <div class="tool-card interactive" tabindex="0" >
+          <div class="tool-icon-wrap">
+            <img 
+              src="Assets/Adobe_Firefly_Logo.svg" 
+              alt="After Effects" 
+              style="width: 260%; height: 250%; object-fit: contain; "
+            >
+          </div>
+          <span class="tool-popup-badge">Adobe Firefly</span>
+        </div>
+
+        
 
       </div>
     </div>
@@ -480,7 +530,7 @@
 
       function measureWidth() {
         var cards = runway.querySelectorAll('.tool-card');
-        var originalCount = 8;
+        var originalCount = 9;
         var gap = parseFloat(getComputedStyle(runway).gap) || 28;
         if (cards.length >= originalCount) {
           var singleCardWidth = cards[0].getBoundingClientRect().width;
